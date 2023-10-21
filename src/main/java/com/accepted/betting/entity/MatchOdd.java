@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.accepted.betting.model.MatchOddDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,4 +31,11 @@ public class MatchOdd {
 	private String specifier;
 	
 	private double odd;
+	
+	public MatchOddDto toDto() {
+		return MatchOddDto.builder()
+				.specifier(specifier)
+				.odd(odd)
+				.build();
+	}
 }
