@@ -48,7 +48,7 @@ public class MatchControllerTest {
         Mockito.when(service.getById(id)).thenReturn(MATCH_SAMPLE);
 
         // When
-        ResponseEntity<MatchDto> response = controller.getMatchById(id);
+        ResponseEntity<MatchDto> response = controller.getMatchById(null, id);
         
         assertNotNull(response.getBody());
 	}
@@ -60,7 +60,7 @@ public class MatchControllerTest {
         Mockito.when(service.getAll(type, PAGE)).thenReturn(new PageImpl<>(Arrays.asList(MATCH_SAMPLE)));
 
         // When
-        ResponseEntity<Page<MatchDto>> response = controller.getMatches(false, type, PAGE);
+        ResponseEntity<Page<MatchDto>> response = controller.getMatches(null, false, type, PAGE);
         
         assertNotNull(response.getBody());
 	}
@@ -78,7 +78,7 @@ public class MatchControllerTest {
 		Mockito.when(service.createMatch(request)).thenReturn(MATCH_SAMPLE);
 
 		// When
-		ResponseEntity<MatchDto> result = controller.createMatch(request);
+		ResponseEntity<MatchDto> result = controller.createMatch(null, request);
 
 		// Then
 		assertNotNull(result.getBody());
@@ -98,7 +98,7 @@ public class MatchControllerTest {
 		Mockito.when(service.updateMatch(id, request)).thenReturn(MATCH_SAMPLE);
 
 		// When
-		ResponseEntity<MatchDto> result = controller.updateMatch(id, request);
+		ResponseEntity<MatchDto> result = controller.updateMatch(null, id, request);
 
 		// Then
 		assertNotNull(result.getBody());
@@ -111,7 +111,7 @@ public class MatchControllerTest {
 		Mockito.when(service.deleteMatch(id)).thenReturn(true);
 
 		// When
-		ResponseEntity<Boolean> result = controller.deleteMatch(id);
+		ResponseEntity<Boolean> result = controller.deleteMatch(null, id);
 
 		// Then
 		assertEquals(true, result.getBody());

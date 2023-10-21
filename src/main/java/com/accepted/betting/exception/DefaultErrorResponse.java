@@ -4,8 +4,6 @@ import java.util.stream.Stream;
 
 import org.springframework.http.HttpStatus;
 
-import com.accepted.betting.model.Sport;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -16,8 +14,9 @@ public enum DefaultErrorResponse {
 	BAD_REQUEST(HttpStatus.BAD_REQUEST, "Bad Request"),
 	NO_MATCH_FOUND(HttpStatus.NOT_FOUND, "No match Found"),
 	INVALID_MATCH_ODDS(HttpStatus.BAD_REQUEST, "Invalid match odds"),
-	INVALID_MATCH_DATE(HttpStatus.BAD_REQUEST, "Invalid match date");
-
+	INVALID_MATCH_DATE(HttpStatus.BAD_REQUEST, "Invalid match date"),
+	TOO_MANY_REQUESTS(HttpStatus.BAD_REQUEST, "Too many requests for the same ip");
+	
 	private HttpStatus status;
 	private String message;
 	

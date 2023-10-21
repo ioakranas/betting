@@ -1,5 +1,6 @@
 package com.accepted.betting.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class MatchController {
 	
 	@ApiOperation("Get a match by Id")
 	@GetMapping("{id}")
-	public ResponseEntity<MatchDto> getMatchById(
+	public ResponseEntity<MatchDto> getMatchById(HttpServletRequest httpRequest,
 			@ApiParam(value = "The Id of the match", example = "1") @PathVariable() int id) throws CheckedException {
 		log.info("Will fetch match with id:{}", id);
 		return ResponseEntity.status(HttpStatus.OK).body(service.getById(id));
@@ -46,7 +47,7 @@ public class MatchController {
 	
 	@ApiOperation("Get matches")
 	@GetMapping()
-	public ResponseEntity<Page<MatchDto>> getMatches(
+	public ResponseEntity<Page<MatchDto>> getMatches(HttpServletRequest httpRequest,
 			@ApiParam(value = "To get upcoming or all", example = "true") @RequestParam(value = "inFuture", defaultValue = "true") boolean inFuture, 
 			@ApiParam(value = "Get by Type", example = "FOOTBALL") @RequestParam(value = "type", required = false) Sport type, 
 			Pageable page) {
@@ -56,14 +57,14 @@ public class MatchController {
 	
 	@ApiOperation("Create match")
 	@PostMapping()
-	public ResponseEntity<MatchDto> createMatch(@Valid @RequestBody MatchDto request) {
+	public ResponseEntity<MatchDto> createMatch(HttpServletRequest httpRequest, @Valid @RequestBody MatchDto request) {
 		log.info("Will create match from request under:{}", request);
 		return ResponseEntity.status(HttpStatus.CREATED).body(service.createMatch(request));
 	}
 	
 	@ApiOperation("Update specific match")
 	@PutMapping("{id}")
-	public ResponseEntity<MatchDto> updateMatch(
+	public ResponseEntity<MatchDto> updateMatch(HttpServletRequest httpRequest,
 			@ApiParam(value = "The Id of the match", example = "1") @PathVariable() int id, @RequestBody MatchDto request) throws CheckedException {
 		log.info("Will update match with id:{} from request under:{}", id, request);
 		return ResponseEntity.status(HttpStatus.OK).body(service.updateMatch(id, request));
@@ -71,7 +72,7 @@ public class MatchController {
 	
 	@ApiOperation("Delete specific match")
 	@DeleteMapping("{id}")
-	public ResponseEntity<Boolean> deleteMatch(
+	public ResponseEntity<Boolean> deleteMatch(HttpServletRequest httpRequest,
 			@ApiParam(value = "The Id of the match", example = "1") @PathVariable() int id) throws CheckedException {
 		log.info("Will delete match with id:{}", id);
 		return ResponseEntity.status(HttpStatus.OK).body(service.deleteMatch(id));
