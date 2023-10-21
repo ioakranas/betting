@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import com.accepted.betting.MatchOddStrategyContext;
 import com.accepted.betting.entity.Match;
 import com.accepted.betting.entity.MatchOdd;
 import com.accepted.betting.exception.CheckedException;
@@ -22,6 +23,7 @@ import com.accepted.betting.model.MatchDto;
 import com.accepted.betting.model.Sport;
 import com.accepted.betting.repository.MatchRepository;
 import com.accepted.betting.service.MatchService;
+import com.accepted.betting.util.DateUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,6 +33,9 @@ public class MatchServiceImpl implements MatchService {
 
 	@Autowired
 	private MatchRepository repository;
+	
+	@Autowired
+    private MatchOddStrategyContext matchOddStrategyContext;
 	
 	@Transactional(readOnly = true)
 	@Override
@@ -67,7 +72,7 @@ public class MatchServiceImpl implements MatchService {
 				.teamB(request.getTeamB())
 				.sport(request.getSport().getCode())
 				.matchDate(request.getMatchDate())
-				.matchTime(request.getMatchTime())
+				.matchTime(request.getMatchTime().withSecond(0))
 				.build();
 		toSave.setOdds(request.getOdds().stream()
 				.map(o -> MatchOdd.builder()
@@ -97,7 +102,7 @@ public class MatchServiceImpl implements MatchService {
 			match.setDescription(match.getDescription().split("-")[0]+"-"+request.getTeamB());
 		});
 		Optional.ofNullable(request.getMatchDate()).ifPresent(match::setMatchDate);
-		Optional.ofNullable(request.getMatchTime()).ifPresent(match::setMatchTime);
+		Optional.ofNullable(request.getMatchTime()).ifPresent(t -> match.setMatchTime(request.getMatchTime().withSecond(0)));
 		if (!CollectionUtils.isEmpty(request.getOdds())) {
 			request.getOdds().stream().forEach(od -> {
 				Optional<MatchOdd> odd = match.getOdds().stream().filter(o -> Objects.equals(od.getSpecifier(), o.getSpecifier())).findFirst();
@@ -105,6 +110,15 @@ public class MatchServiceImpl implements MatchService {
 					odd.get().setOdd(od.getOdd());
 				}
 			});
+			Sport s = Sport.findByCode(match.getSport());
+			if (!matchOddStrategyContext.isValid(s, match.getOdds().stream().map(MatchOdd::toDto).collect(Collectors.toList()))) {
+				log.info("Invalid match's odds found");
+				throw new CheckedException(DefaultErrorResponse.INVALID_MATCH_ODDS);
+			}
+		}
+		if (!DateUtils.isInFuture(match.getMatchDate(), match.getMatchTime())) {
+			log.info("Invalid match's date found for date:{} and time:{}", request.getMatchDate(), request.getMatchTime());
+			throw new CheckedException(DefaultErrorResponse.INVALID_MATCH_DATE);
 		}
 		return repository.save(match).toDto();
 	}

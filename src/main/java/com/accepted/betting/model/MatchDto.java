@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class MatchDto {
 
     @ApiModelProperty(value = "Match description", example = "X-Y")
-	private String desctiption;
+	private String description;
 
     @ApiModelProperty(value = "Match date", example = "2023-11-20")
     @NotNull

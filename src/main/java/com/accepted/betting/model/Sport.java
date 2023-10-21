@@ -9,11 +9,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Sport {
 
-	FOOTBALL("1"),
-	BASKET("2");
+	FOOTBALL("1", 3),
+	BASKET("2", 2);
 
 	private String code;
-	
+	private int numberOfValidOdds;
+		
 	public static Sport findByCode(String code) {
 		return Stream.of(Sport.values())
                 .filter(s -> s.getCode().equalsIgnoreCase(code))

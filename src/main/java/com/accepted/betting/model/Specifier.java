@@ -7,10 +7,11 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Specifier {
 
-	WIN("1"),
-	DRAW("X"),
-	LOSE("2");
+	WIN("1", true),
+	DRAW("X", false),
+	LOSE("2", true);
 	
 	private String code;
+	private boolean isBasketValid;
 
 }

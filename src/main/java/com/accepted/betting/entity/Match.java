@@ -54,7 +54,7 @@ public class Match {
 
 	public MatchDto toDto() {
 		return MatchDto.builder()
-				.desctiption(description)
+				.description(description)
 				.matchDate(matchDate)
 				.matchTime(matchTime)
 				.teamA(teamA)

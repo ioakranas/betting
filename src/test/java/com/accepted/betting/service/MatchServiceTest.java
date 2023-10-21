@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import com.accepted.betting.MatchOddStrategyContext;
 import com.accepted.betting.entity.Match;
 import com.accepted.betting.exception.CheckedException;
 import com.accepted.betting.exception.DefaultErrorResponse;
@@ -36,12 +37,16 @@ public class MatchServiceTest {
 	private static final Match MATCH_SAMPLE = Match.builder()
 			.id(id)
 			.description(DESCRIPTION)
+			.sport(Sport.FOOTBALL.getCode())
 			.odds(Collections.emptyList())
 			.build();
 	private static final Pageable PAGE = PageRequest.of(0, 5);
 	
 	@MockBean
 	private MatchRepository repository;
+	
+	@MockBean
+	private MatchOddStrategyContext matchOddStrategyContext;
 	
 	@Autowired
 	private MatchService service;
@@ -56,7 +61,7 @@ public class MatchServiceTest {
         
         // Then
         assertNotNull(result);
-        assertEquals(DESCRIPTION, result.getDesctiption());
+        assertEquals(DESCRIPTION, result.getDescription());
 	}
 	
 	@Test
@@ -144,7 +149,7 @@ public class MatchServiceTest {
         
         // Then
         assertNotNull(result);
-        assertEquals(DESCRIPTION, result.getDesctiption());
+        assertEquals(DESCRIPTION, result.getDescription());
 	}
 	
 	@Test
@@ -153,19 +158,21 @@ public class MatchServiceTest {
 		MatchDto request = MatchDto.builder()
 				.teamA("X")
 				.teamB("Y")
-				.matchDate(new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+				.matchDate(new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusMonths(2))
 				.matchTime(new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalTime())
 				.odds(Arrays.asList(MatchOddDto.builder().specifier("2").odd(2d).build()))
+				.sport(Sport.BASKET)
 				.build();
         Mockito.when(repository.findById(id)).thenReturn(Optional.of(MATCH_SAMPLE));
         Mockito.when(repository.save(Mockito.any())).thenReturn(MATCH_SAMPLE);
+        Mockito.when(matchOddStrategyContext.isValid(Mockito.any(), Mockito.any())).thenReturn(true);
 
         // When
         MatchDto result = service.updateMatch(id, request);
 		
         // Then
         assertNotNull(result);
-        assertEquals(DESCRIPTION, result.getDesctiption());
+        assertEquals(DESCRIPTION, result.getDescription());
 	}
 	
 	@Test
