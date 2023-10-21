@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 
 import com.accepted.betting.validator.ValidDate;
 import com.accepted.betting.validator.ValidOdds;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,7 @@ public class MatchDto {
 	private LocalDate matchDate;
 
     @ApiModelProperty(value = "Match time", example = "20:00")
+    @JsonFormat(pattern = "HH:mm")
     @NotNull
 	private LocalTime matchTime;
 
