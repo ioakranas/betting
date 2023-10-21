@@ -6,12 +6,17 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import com.accepted.betting.validator.ValidDate;
+import com.accepted.betting.validator.ValidOdds;
+
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@ValidOdds
+@ValidDate
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

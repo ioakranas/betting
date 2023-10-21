@@ -3,6 +3,7 @@ package com.accepted.betting.exception;
 import java.lang.reflect.UndeclaredThrowableException;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,13 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<String> handleCheckedException(CheckedException e) {
 		ErrorResponse error = e.getErrorResponse();
 		return ResponseEntity.status(error.getStatus()).body(error.getMessage());
+	}
+	
+	@ExceptionHandler(value = MethodArgumentNotValidException.class)
+	public ResponseEntity<String> handleMethodArgumentNotValidException(Exception e) {
+		DefaultErrorResponse de = DefaultErrorResponse.findByExceptionMessage(e.getMessage());
+		return ResponseEntity.status(de.getStatus())
+				.body(de.getMessage());
 	}
 
 	@ExceptionHandler()

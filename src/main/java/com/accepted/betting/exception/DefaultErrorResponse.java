@@ -26,4 +26,11 @@ public enum DefaultErrorResponse {
                 .findFirst()
                 .orElse(DefaultErrorResponse.BAD_REQUEST);
 	}
+	
+	public static DefaultErrorResponse findByExceptionMessage(String message) {
+		return Stream.of(DefaultErrorResponse.values())
+                .filter(s -> message.contains(s.getMessage()))
+                .findFirst()
+                .orElse(DefaultErrorResponse.BAD_REQUEST);
+	}
 }
